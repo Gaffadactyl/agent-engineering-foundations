@@ -17,8 +17,8 @@ You already know:
 ## New concepts introduced and defined today:
 
 - Boolean values
-    - if / else
-
+- if / else
+- Guardrails
 - Tests (as checks, not magic)
 
 ### Core idea (Theory)
@@ -53,7 +53,7 @@ An if statement says:
 Only one branch runs.
 
 - Guardrails
-A guardrail is a check that prevents bad behavior.
+A guardrail is a check that prevents unsafe or invalid behavior.
 
 Agents rely on guardrails to:
 
@@ -103,7 +103,59 @@ def test_short_text():
 
 ##### Do One
 
-- see classify_task.py
+Do One (Session Task)
+
+Write classify_task(task) that:
+
+accepts a string
+returns a dictionary with:
+    "task"
+    "category" → "simple" or "complex"
+
+rule:
+
+"simple" if len(task) < 20
+"complex" otherwise
+
+Final Correct Implementation
+
+def classify_task(task):
+    if len(task) < 20:
+        category = "simple"
+    else:
+        category = "complex"
+
+    return {
+        "task": task,
+        "category": category
+    }
+
+Tests (as checks, not magic)
+
+def test_simple_task():
+    result = classify_task("read")
+    assert result["category"] == "simple"
+
+
+Tests ensure:
+
+decisions behave as expected
+changes do not silently break behavior
+
+Debugging Note (Important Learning)
+
+Issue encountered:
+    Tests failed due to import errors
+
+Root cause:
+    Python runs files, not projects
+    imports depend on execution context
+
+Fix:
+    Explicitly add src/ to sys.path
+
+Instructor Note:
+Understanding imports is critical for agent systems that load tools dynamically.
 
 You just learned that:
 
@@ -131,3 +183,10 @@ That distinction is foundational for:
 "Tests perform checks and validate outputs. Even simple functions will have exponential effects from poor decisions and bad data if/when they are added to larger models."
 
 <Even simple functions will have exponential effects from poor decisions and bad data if/when they are added to larger models.>
+
+Outcome
+
+Status: Pass
+Time spent: 56 mins
+Biggest confusion: Python imports and execution context
+Key unlock: Decisions + tests prevent silent failure
